@@ -43,6 +43,9 @@ Examples: `debian/buster ubuntu/focal`
 
 ## Example Use
 
+This uploads all the RPM and DEB packages in the root folder.
+RedHat packages only go into `el/6` and Debian packages go into `ubuntu/focal` and `debian/buster`.
+
 ```yaml
 - uses: golift/upload-packagecloud@v1
   with:
@@ -50,5 +53,5 @@ Examples: `debian/buster ubuntu/focal`
     apitoken: ${{ secrets.PACKAGECLOUD_TOKEN }}
     packages: .
     rpmdists: el/6
-    debdists: ubuntu/focal ubuntu/xenial
+    debdists: ubuntu/focal debian/buster
 ```
