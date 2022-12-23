@@ -5,14 +5,14 @@ inputs:
   packages:
     description: Name of the package or package-filled folder to upload.
     required: true
-  repo:
+  userrepo:
     description: The repository to upload into. Must be provided in format user/repo.
     required: true
-  rpmdistrib:
+  rpmdists:
     description: "Space-separated list of RHEL distribution versions where RPMs get
       uploaded. Example: el/6 ol/7"
     required: false
-  debdistrib:
+  debdists:
     description: "Space-separated list of Debian distribution versions where DEBs
       get uploaded. Example: ubuntu/focal debian/buster"
     required: false
@@ -27,7 +27,7 @@ runs:
       shell: bash
       env:
         SOURCE: ${{ inputs.packages }}
-        REPO: ${{ inputs.repo }}
-        PACKAGECLOUD_RPM_DISTRIB: ${{ inputs.rpmdistrib }}
-        PACKAGECLOUD_DEB_DISTRIB: ${{ inputs.debdistrib }}
+        REPO: ${{ inputs.userrepo }}
+        PACKAGECLOUD_RPM_DISTRIB: ${{ inputs.rpmdists }}
+        PACKAGECLOUD_DEB_DISTRIB: ${{ inputs.debdists }}
         PACKAGECLOUD_TOKEN: ${{ inputs.apitoken }}
