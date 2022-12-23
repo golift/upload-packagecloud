@@ -14,6 +14,9 @@ If you need any other features, please [ask](https://github.com/golift/upload-pa
 
 This required input must be the `username/repository` on package cloud that the packages are uploaded to.
 
+If you are uploading a non-RPM/DEB package, you may expand this to the distribution path as well.
+ie. `username/repository/node` to push into an NPM repository.
+
 ### apitoken
 
 Store your Package Cloud API token in GitHub Secrets and pass it in here.

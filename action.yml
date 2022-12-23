@@ -1,6 +1,6 @@
 ---
-name: Upload packages PackageCloud.io
-description: Uploads RPM and DEB packages to PackageCloud.io.
+name: Publish PackageCloud.io Packages
+description: Easily mass-uploads RPM and DEB packages to PackageCloud.io. Other package types have limited support.
 branding:
   icon: 'upload-cloud'
   color: 'blue'
