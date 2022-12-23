@@ -1,6 +1,9 @@
 ---
 name: Upload packages PackageCloud.io
 description: Uploads RPM and DEB packages to PackageCloud.io.
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
 inputs:
   packages:
     description: Name of the package or package-filled folder to upload.
