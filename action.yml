@@ -1,5 +1,6 @@
+---
 name: Upload packages PackageCloud.io
-description: Uploads RPM and DEB packages to PackageCloud.io
+description: Uploads RPM and DEB packages to PackageCloud.io.
 inputs:
   packages:
     description: Name of the package or package-filled folder to upload.
@@ -8,10 +9,12 @@ inputs:
     description: The repository to upload into. Must be provided in format user/repo.
     required: true
   rpmdistrib:
-    description: Space-separated list of RHEL distribution versions where RPMs get uploaded. Example: el/6 ol/7
+    description: "Space-separated list of RHEL distribution versions where RPMs get
+      uploaded. Example: el/6 ol/7"
     required: false
   debdistrib:
-    description: Space-separated list of Debian distribution versions where DEBs get uploaded. Example: ubuntu/focal debian/buster
+    description: "Space-separated list of Debian distribution versions where DEBs
+      get uploaded. Example: ubuntu/focal debian/buster"
     required: false
   apitoken:
     description: The Package Cloud API token with push access.
