@@ -1,6 +1,6 @@
 # upload-packagecloud
 
-GitHub Action to upload packages to PackgeCloud.io.
+GitHub Action to upload packages to [PackageCloud.io](https://PackageCloud.io).
 
 All the other similar actions out there have flaws and do not meet my needs.
 This one probably has flaws too, but it tries to be better.
