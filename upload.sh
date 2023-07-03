@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+shopt -s nullglob
 
 echo "Installing package cloud gem..."
 sudo gem install --no-document package_cloud
