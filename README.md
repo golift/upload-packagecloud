@@ -6,6 +6,9 @@ All the other similar actions out there have flaws and do not meet my needs.
 This one probably has flaws too, but it tries to be better.
 If you need any other features, please [ask](https://github.com/golift/upload-packagecloud/issues/new).
 
+Pin `uses: golift/upload-packagecloud@v1` (or `@v1.N`). Pushing a `vN.N.N` tag
+moves those floating tags to the new commit when it is the highest matching release.
+
 ## Inputs
 
 - Version 1 has three required inputs: `userrepo`, `apitoken` and `packages`.
@@ -26,18 +29,18 @@ Store your Package Cloud API token in GitHub Secrets and pass it in here.
 This input may be either a folder or a single file name.
 If it's a single file, any package type is supported,
 but you have little control over the "distribution version" for non-RPM/DEB package types.
-If a folder is provided, all `*.deb` and `*.rpm` files in it (non-recusrive) are uploaded.
+If a folder is provided, all `*.deb` and `*.rpm` files in it (non-recursive) are uploaded.
 No other package types are supported for a folder input.
 
 ### rpmdists
 
-This optional field controls which YUM distribtions RPM packages are uploaded to.
+This optional field controls which YUM distributions RPM packages are uploaded to.
 Specify more than 1 by separating them with spaces.
 Examples: `el/6 el/7 ol/6 ol/7`
 
 ### debdists
 
-This optional field controls which APT distribtions DEB packages are uploaded to.
+This optional field controls which APT distributions DEB packages are uploaded to.
 Specify more than 1 by separating them with spaces.
 Examples: `debian/buster ubuntu/focal`
 
