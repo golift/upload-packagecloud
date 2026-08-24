@@ -1,0 +1,81 @@
+# Release pipeline. Push a full semver tag (v1.2.3) and this workflow:
+#   1. Creates a GitHub Release for the tag.
+#   2. Force-moves the floating tags (v1, v1.2) that GitHub Actions
+#      consumers track with `uses: golift/upload-packagecloud@v1`, but only
+#      when this tag is the highest matching vN.* / vN.N.*.
+#
+# The trigger matches ONLY vN.N.N. GitHub's filter-pattern syntax (not a
+# regex, but it does support `[0-9]` classes and `+` repetition — see the
+# "filter pattern cheat sheet" in the GitHub Actions docs) must match the
+# whole tag, so the floating vN / vN.N tags this workflow itself pushes can
+# never re-trigger it, and neither can prerelease tags like v1.2.3-beta.
+# A job-level guard also rejects anything that is not strict vN.N.N.
+# Never retag a published vN.N.N. Breaking Action input/output changes mean
+# v2.0.0 and a new v2 floater. Floating tags are for `uses:`.
+name: release
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+permissions:
+  contents: read
+concurrency:
+  group: upload-packagecloud-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: require-strict-semver
+        run: |
+          if ! [[ "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "ref ${GITHUB_REF_NAME} is not a strict vN.N.N tag" >&2
+            exit 1
+          fi
+      - name: create-github-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" --generate-notes
+  # Plant/move the floating tags AFTER the release succeeds, and only when
+  # this tag is the highest of its major/minor series so a backport cannot
+  # regress uses: golift/upload-packagecloud@v1.
+  floating-tags:
+    needs: [release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: move-floating-tags
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          if ! [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "ref ${tag} is not a strict vN.N.N tag" >&2
+            exit 1
+          fi
+          git fetch --tags --force
+          highest() {
+            git tag -l "$1" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1
+          }
+          major="${tag%%.*}"
+          minor="${tag%.*}"
+          advance() {
+            local floater="$1"
+            local pattern="$2"
+            if [ "$(highest "${pattern}")" = "${tag}" ]; then
+              git tag --force "${floater}" "${tag}"
+              git push --force origin "${floater}"
+            else
+              echo "skip ${floater}: ${tag} is not the highest ${pattern}"
+            fi
+          }
+          advance "${major}" "${major}.*"
+          advance "${minor}" "${minor}.*"
