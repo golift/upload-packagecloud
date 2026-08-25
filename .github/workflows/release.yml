@@ -40,7 +40,13 @@ jobs:
       - name: create-github-release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" --generate-notes
+        run: |
+          set -euo pipefail
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "release ${GITHUB_REF_NAME} already exists"
+          else
+            gh release create "${GITHUB_REF_NAME}" --generate-notes
+          fi
   # Plant/move the floating tags AFTER the release succeeds, and only when
   # this tag is the highest of its major/minor series so a backport cannot
   # regress uses: golift/upload-packagecloud@v1.
